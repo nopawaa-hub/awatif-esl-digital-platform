@@ -4,80 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Comprehension: The Malayan Tapir</title>
-    <!-- Import the 3D model viewer script -->
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <!-- Favicon / Tab bar logo -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/nopawaa-hub/awatif-esl-digital-platform/main/logo-awatif.png">
+    
+    <!-- Import a playful font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- CSS VARIABLES FOR CHILD-FRIENDLY COLOR THEME --- */
+        /* --- CSS VARIABLES FOR PREMIUM CHILD-FRIENDLY THEME --- */
         :root {
-            --bg-color: #f0fdf4; /* Soft green background */
+            --bg-base: #e0f2fe; /* Light blue base */
+            --bg-dot: #bae6fd;
             --container-bg: #ffffff;
-            --text-main: #333333;
-            --text-instruction: #15803d; /* Dark green */
-            --accent-color: #f59e0b; /* Warm orange/yellow for buttons */
-            --accent-hover: #d97706;
-            --passage-bg: #ecfdf5; /* Very light mint */
-            --passage-border: #a7f3d0;
-            --answer-bg: #eff6ff; /* Soft blue */
-            --answer-border: #60a5fa;
-            --input-border: #cbd5e1;
+            --text-main: #334155;
+            --text-title: #0f172a;
+            --accent-green: #10b981;
+            --accent-green-dark: #059669;
+            --accent-orange: #f59e0b;
+            --accent-orange-dark: #d97706;
+            --passage-bg: #f8fafc;
+            --passage-border: #cbd5e1;
+            --answer-bg: #f0fdf4; 
+            --answer-border: #4ade80;
+            --input-border: #94a3b8;
             --input-focus: #3b82f6;
         }
 
-        /* --- GLOBAL STYLES --- */
+        /* --- GLOBAL STYLES & FUN BACKGROUND --- */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background-color: var(--bg-base);
+            /* Playful polka-dot background */
+            background-image: radial-gradient(var(--bg-dot) 3px, transparent 3px);
+            background-size: 24px 24px;
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 30px 20px;
             display: flex;
             justify-content: center;
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Floating Jungle Decor */
+        body::before, body::after {
+            content: '🌿';
+            position: fixed;
+            font-size: 80px;
+            z-index: -1;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+        body::before { top: 5%; left: 2%; transform: rotate(-15deg); }
+        body::after { bottom: 10%; right: 2%; font-size: 100px; animation-delay: 2s; transform: scaleX(-1) rotate(-20deg); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-15deg); }
+            50% { transform: translateY(-20px) rotate(-5deg); }
         }
 
         .container {
             background-color: var(--container-bg);
-            max-width: 800px;
+            max-width: 850px;
             width: 100%;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            padding: 30px 40px;
+            border-radius: 30px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 0 0 8px rgba(255,255,255,0.5);
+            padding: 40px 50px;
             box-sizing: border-box;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- TYPOGRAPHY & HEADINGS --- */
         h1 {
             text-align: center;
-            color: var(--text-main);
-            font-size: 2.2rem;
-            margin-bottom: 5px;
+            color: var(--text-title);
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #bae6fd;
+            letter-spacing: -1px;
         }
 
         .instructions {
             text-align: center;
-            color: var(--text-instruction);
-            font-size: 1.2rem;
-            font-weight: bold;
+            color: #1e40af;
+            font-size: 1.3rem;
+            font-weight: 800;
             margin-bottom: 30px;
-            background-color: #dcfce7;
-            padding: 10px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 3px dashed #60a5fa;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5);
         }
 
         /* --- 3D MODEL SECTION --- */
         .model-section {
-            background-color: #f8fafc;
-            border: 3px solid #cbd5e1;
-            border-radius: 12px;
+            background-color: #f1f5f9;
+            border: 4px solid #cbd5e1;
+            border-radius: 24px;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             text-align: center;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
         }
         
         .model-instruction {
-            color: #0f172a;
-            font-size: 1.2rem;
-            font-weight: bold;
+            color: var(--text-title);
+            font-size: 1.3rem;
+            font-weight: 900;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -85,222 +123,494 @@
             gap: 10px;
         }
 
-        model-viewer {
+        .sketchfab-embed-wrapper {
             width: 100%;
             height: 350px;
-            border-radius: 8px;
+            border-radius: 16px;
             background-color: #e2e8f0;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #94a3b8;
+        }
+
+        .sketchfab-embed-wrapper iframe {
+            width: 100%;
+            height: calc(100% + 120px);
+            border: none;
+            position: absolute;
+            top: -60px;
+            left: 0;
+        }
+
+        /* --- DETECTIVE MISSION BOX --- */
+        .mission-box {
+            background: linear-gradient(to right, #fffbeb, #fef3c7);
+            border: 3px solid #fcd34d;
+            border-left: 10px solid #fbbf24;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.2);
+        }
+
+        .mission-box h3 {
+            margin: 0 0 10px 0;
+            color: #b45309;
+            font-size: 1.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mission-box ul {
+            margin: 0;
+            padding-left: 25px;
+            color: #78350f;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .mission-box li {
+            margin-bottom: 5px;
+        }
+
+        /* --- DRAWING TOOLBAR (3D CHUNKY BUTTONS) --- */
+        .drawing-toolbar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid #e2e8f0;
+        }
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #ffffff;
+            border: 3px solid #cbd5e1;
+            border-bottom-width: 6px; /* 3D pop effect */
+            color: #475569;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.1s ease-out;
             outline: none;
         }
 
-        /* --- READING PASSAGE SECTION --- */
+        .tool-btn svg { width: 20px; height: 20px; }
+
+        .tool-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        .tool-btn:active, .tool-btn.active {
+            border-bottom-width: 3px;
+            transform: translateY(3px); /* Push down effect */
+        }
+
+        .tool-btn.active {
+            background-color: #3b82f6;
+            border-color: #1d4ed8;
+            color: white;
+        }
+
+        .tool-btn.clear-btn {
+            background-color: #fef2f2;
+            border-color: #f87171;
+            color: #b91c1c;
+        }
+        .tool-btn.clear-btn:active {
+            border-color: #dc2626;
+        }
+
+        /* --- PREMIUM READING PASSAGE SECTION --- */
         .passage-box {
             background-color: var(--passage-bg);
-            border: 3px solid var(--passage-border);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
+            border: 4px solid var(--passage-border);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 40px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
         }
 
         .passage-title {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
+            font-weight: 900;
             color: #065f46;
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .passage-content-wrapper {
+            position: relative;
+            border-radius: 12px;
+            transition: box-shadow 0.2s; 
+            padding: 15px;
+            background-color: #ffffff;
+            border: 2px dashed #cbd5e1;
+            user-select: text; /* Allows selection by default */
+        }
+
+        .passage-content-wrapper.no-select {
+            user-select: none;
+        }
+        
+        .passage-content-wrapper.eraser-active {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23b91c1c" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>') 0 24, crosshair;
         }
 
         .passage-text {
-            font-size: 1.3rem; /* Large font for Year 4 */
-            line-height: 1.8;
-            text-align: justify;
+            font-size: 1.4rem; 
+            line-height: 1.9;
+            text-align: left;
+            color: #334155;
+            font-weight: 700;
         }
+
+        /* PREMIUM HIGHLIGHTER CSS OVERRIDE! */
+        #text-container span[style*="background"], 
+        #text-container font[style*="background"] {
+            background: linear-gradient(120deg, #fde047 0%, #fef08a 100%) !important;
+            color: #b91c1c !important; /* Bold red text */
+            border: 3px dashed #ea580c !important; /* Orange outline */
+            border-radius: 8px;
+            padding: 2px 6px;
+            font-weight: 900 !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: inline-block;
+            transform: rotate(-1deg); /* Slight fun tilt */
+            cursor: pointer; /* To indicate it can be erased */
+        }
+
+        /* --- HIGHLIGHT CONFIRMATION POPUP --- */
+        #highlight-confirm {
+            position: absolute;
+            display: none;
+            gap: 10px;
+            background: #ffffff;
+            border: 3px solid #cbd5e1;
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: popIn 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .confirm-btn {
+            background: none;
+            border: 2px solid transparent;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-btn.tick { color: #16a34a; }
+        .confirm-btn.tick:hover { background: #dcfce7; border-color: #4ade80; transform: scale(1.1); }
+        .confirm-btn.cross { color: #dc2626; }
+        .confirm-btn.cross:hover { background: #fee2e2; border-color: #f87171; transform: scale(1.1); }
+
 
         /* --- QUESTIONS SECTION --- */
         .question-block {
+            background-color: #f8fafc;
+            border: 3px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px;
             margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed #e2e8f0;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .question-block:last-of-type {
-            border-bottom: none;
+        .question-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            border-color: #cbd5e1;
         }
 
         .question-text {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1e293b;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* --- INPUT FIELDS --- */
+        .question-text::before {
+            content: '❓';
+            font-size: 1.5rem;
+        }
+
         textarea {
             width: 100%;
-            height: 80px;
-            padding: 15px;
+            height: 90px;
+            padding: 15px 20px;
             font-family: inherit;
-            font-size: 1.1rem;
-            border: 2px solid var(--input-border);
-            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            border: 3px solid var(--input-border);
+            border-radius: 12px;
             box-sizing: border-box;
             resize: vertical;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background-color: #ffffff;
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--input-focus);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            background-color: #f0fdf4;
         }
 
         /* --- SUGGESTED ANSWERS --- */
         .suggested-answer {
-            display: none; /* Hidden by default */
+            display: none;
             background-color: var(--answer-bg);
-            border-left: 6px solid var(--answer-border);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
-            font-size: 1.1rem;
-            color: #1e3a8a;
-            animation: fadeIn 0.5s ease-in-out;
+            border: 3px solid var(--answer-border);
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #065f46;
+            animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
         }
 
-        .answer-label {
-            font-weight: bold;
-            color: #2563eb;
-            margin-right: 5px;
-        }
-
-        /* --- BUTTONS --- */
-        .btn-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        button {
-            background-color: var(--accent-color);
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 30px; /* Pill shape */
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-
-        button:active {
-            transform: translateY(0);
+        .suggested-answer::before {
+            content: '💡';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            font-size: 2rem;
+            background: white;
+            border-radius: 50%;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Simple fade-in animation for answers */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .answer-label {
+            font-weight: 900;
+            color: #16a34a;
+            margin-right: 5px;
+            text-transform: uppercase;
+            font-size: 1rem;
         }
 
-        /* Responsive design for tablets/phones */
+        /* --- MAIN CHECK BUTTON --- */
+        .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .main-btn {
+            background-color: var(--accent-orange);
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 900;
+            font-family: inherit;
+            padding: 20px 40px;
+            border: 4px solid var(--accent-orange-dark);
+            border-bottom-width: 8px; /* Extra chunky */
+            border-radius: 40px; 
+            cursor: pointer;
+            transition: all 0.1s ease-out;
+            outline: none;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+        }
+
+        .main-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .main-btn:active {
+            border-bottom-width: 4px;
+            transform: translateY(4px);
+        }
+
+        /* Animations */
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        #tool-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0f172a;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border: 3px solid #3b82f6;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        #tool-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
+
+        .pulse-bleep {
+            animation: bleepPulse 0.4s ease-in-out 3;
+        }
+
+        @keyframes bleepPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+            50% { box-shadow: 0 0 0 12px rgba(59, 130, 246, 0.3); }
+        }
+
+        /* Responsive */
         @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            .passage-text {
-                font-size: 1.15rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            model-viewer {
-                height: 250px;
-            }
+            .container { padding: 25px 20px; border-width: 2px; }
+            h1 { font-size: 2.2rem; }
+            .passage-title { font-size: 1.8rem; }
+            .passage-text { font-size: 1.2rem; }
+            .sketchfab-embed-wrapper { height: 250px; }
+            .tool-btn { padding: 8px 15px; font-size: 1rem; }
+            .main-btn { font-size: 1.3rem; padding: 15px 25px; }
+            body::before, body::after { display: none; } /* Hide floating decor on mobile */
         }
     </style>
 </head>
 <body>
+
+    <!-- HIGHLIGHT CONFIRMATION POPUP -->
+    <div id="highlight-confirm">
+        <button class="confirm-btn tick" onclick="confirmHighlight()" title="Confirm Highlight">✅</button>
+        <button class="confirm-btn cross" onclick="cancelHighlight()" title="Cancel">❌</button>
+    </div>
 
     <div class="container">
         <!-- HEADER & INSTRUCTIONS -->
         <h1>Reading Time! 📚</h1>
         <div class="instructions">
             Step 1: Explore the 3D model.<br>
-            Step 2: Read the story below.<br>
-            Step 3: Type your answers in the boxes.
+            Step 2: Read the story & find clues.<br>
+            Step 3: Type your answers.
         </div>
 
         <!-- 3D MODEL SECTION -->
         <section class="model-section">
             <div class="model-instruction">
-                🔍 Look at the 3D tapir. Turn it around and observe its body!
+                🔍 Look at the 3D tapir. Turn it around and observe!
             </div>
-            <model-viewer 
-                src="https://raw.githubusercontent.com/nopawaa-hub/awatif-esl-digital-platform/main/assets/tapir-non-commercial/source/tapir_non_commercial.glb" 
-                alt="A 3D model of a Malayan Tapir" 
-                auto-rotate 
-                camera-controls 
-                rotation-per-second="30deg"
-                interaction-prompt="auto">
-            </model-viewer>
+            <div class="sketchfab-embed-wrapper">
+                <iframe title="Tapir (non commercial)" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/e44bf665b11846a7b35dfe30e722f824/embed?autostart=1&ui_infos=0&ui_watermark=0&ui_controls=0&ui_settings=0&ui_inspector=0&ui_animations=0&ui_help=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0&ui_stop=0&ui_hint=0&ui_ar=0"> </iframe>
+            </div>
         </section>
 
         <!-- READING PASSAGE -->
         <main class="passage-box">
-            <h2 class="passage-title">🌿 The Amazing Malayan Tapir 🌿</h2>
-            <div class="passage-text">
-                The Malayan tapir is a very special animal found in the forests of Malaysia. It has a big black body with a large white patch on its back and sides. This special black-and-white pattern helps it hide from dangerous animals in the dark forest. <br><br>
-                Tapirs are herbivores, which means they only eat plants. They love to eat fresh leaves, twigs, and juicy fruits. Tapirs have a long, flexible nose called a snout. They use their strong snout to grab leaves from branches and to smell food from far away. <br><br>
-                Sadly, the Malayan tapir is an endangered animal. This is because the forests where they live are being cut down.
+            <h2 class="passage-title">🌿 The Malayan Tapir 🌿</h2>
+            
+            <!-- DETECTIVE MISSION (INSTRUCTION BOX) -->
+            <div class="mission-box">
+                <h3>🕵️‍♂️ Detective Mission!</h3>
+                <p style="margin-top: 0; font-weight: 800;">Use the <span style="color: #ea580c;">Highlighter</span> tool to find clues in the story:</p>
+                <ul>
+                    <li>Highlight what <strong>food tapirs eat</strong>.</li>
+                    <li>Highlight <strong>why they are endangered</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- DRAWING TOOLBAR -->
+            <div class="drawing-toolbar">
+                <button class="tool-btn active" data-tool="cursor" onclick="selectTool('cursor')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
+                    Cursor
+                </button>
+                <button class="tool-btn" data-tool="highlight" onclick="selectTool('highlight')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+                    Highlight Clues
+                </button>
+                <button class="tool-btn" data-tool="eraser" onclick="selectTool('eraser')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+                    Eraser
+                </button>
+                <button class="tool-btn clear-btn" onclick="clearAll()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    Clear Highlights
+                </button>
+            </div>
+
+            <div class="passage-content-wrapper" id="text-container">
+                <div class="passage-text">
+                    The Malayan tapir is a very special animal found in the forests of Malaysia. It has a big black body with a large white patch on its back and sides. This special black-and-white pattern helps it hide from dangerous animals in the dark forest. <br><br>
+                    Tapirs are herbivores, which means they only eat plants. They love to eat fresh leaves, twigs, and juicy fruits. Tapirs have a long, flexible nose called a snout. They use their strong snout to grab leaves from branches and to smell food from far away. <br><br>
+                    Sadly, the Malayan tapir is an endangered animal. This is because the forests where they live are being cut down.
+                </div>
             </div>
         </main>
 
         <!-- COMPREHENSION QUESTIONS -->
         <section class="questions-section">
             
-            <!-- Question 1 -->
             <div class="question-block">
-                <div class="question-text">1. What do tapirs eat?</div>
+                <div class="question-text">What do tapirs eat?</div>
                 <textarea placeholder="Type your answer here..."></textarea>
                 <div class="suggested-answer">
-                    <span class="answer-label">Suggested Answer:</span> 
+                    <span class="answer-label">Suggested Answer:</span> <br>
                     They eat plants, fresh leaves, twigs, and juicy fruits.
                 </div>
             </div>
 
-            <!-- Question 2 -->
             <div class="question-block">
-                <div class="question-text">2. Why are they endangered?</div>
+                <div class="question-text">Why are they endangered?</div>
                 <textarea placeholder="Type your answer here..."></textarea>
                 <div class="suggested-answer">
-                    <span class="answer-label">Suggested Answer:</span> 
+                    <span class="answer-label">Suggested Answer:</span> <br>
                     They are endangered because the forests where they live are being cut down.
                 </div>
             </div>
 
-            <!-- Question 3 -->
             <div class="question-block">
-                <div class="question-text">3. How does their body help them survive?</div>
+                <div class="question-text">How does their body help them survive?</div>
                 <textarea placeholder="Type your answer here..."></textarea>
                 <div class="suggested-answer">
-                    <span class="answer-label">Suggested Answer:</span> 
+                    <span class="answer-label">Suggested Answer:</span> <br>
                     Their black-and-white pattern helps them hide from dangerous animals in the dark forest.
                 </div>
             </div>
 
-            <!-- Question 4 -->
             <div class="question-block">
-                <div class="question-text">4. What colours can you see on the tapir’s body?</div>
+                <div class="question-text">What colours can you see on the tapir’s body?</div>
                 <textarea placeholder="Type your answer here..."></textarea>
                 <div class="suggested-answer">
-                    <span class="answer-label">Suggested Answer:</span> 
+                    <span class="answer-label">Suggested Answer:</span> <br>
                     I can see black and white.
                 </div>
             </div>
@@ -309,36 +619,201 @@
 
         <!-- INTERACTION BUTTON -->
         <div class="btn-container">
-            <button id="checkBtn" onclick="toggleAnswers()">Check My Understanding ✓</button>
+            <button id="checkBtn" class="main-btn" onclick="toggleAnswers()">Check My Answers! ✨</button>
         </div>
     </div>
 
+    <!-- Notification Toast -->
+    <div id="tool-toast"></div>
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // --- Answer Checking Logic ---
         function toggleAnswers() {
-            // Get all the hidden answer elements
             const answers = document.querySelectorAll('.suggested-answer');
             const button = document.getElementById('checkBtn');
-            
-            // Check the current state using the first answer box
             const isHidden = window.getComputedStyle(answers[0]).display === 'none';
 
             if (isHidden) {
-                // If hidden, show them and update button text/color
-                answers.forEach(answer => {
-                    answer.style.display = 'block';
-                });
-                button.innerHTML = "Hide Suggested Answers ✕";
-                button.style.backgroundColor = "#ef4444"; // Change button to red
+                answers.forEach(answer => answer.style.display = 'block');
+                button.innerHTML = "Hide Answers 🙈";
+                button.style.backgroundColor = "#ef4444"; 
+                button.style.borderColor = "#b91c1c";
             } else {
-                // If showing, hide them and revert button text/color
-                answers.forEach(answer => {
-                    answer.style.display = 'none';
-                });
-                button.innerHTML = "Check My Understanding ✓";
-                button.style.backgroundColor = "var(--accent-color)"; // Back to orange
+                answers.forEach(answer => answer.style.display = 'none');
+                button.innerHTML = "Check My Answers! ✨";
+                button.style.backgroundColor = "var(--accent-orange)";
+                button.style.borderColor = "var(--accent-orange-dark)";
             }
         }
+
+        // --- Interactive Highlighting & Eraser Logic ---
+        const textContainer = document.getElementById('text-container');
+        const toast = document.getElementById('tool-toast');
+        const confirmPopup = document.getElementById('highlight-confirm');
+        
+        let currentTool = 'cursor';
+        let pendingSelectionRange = null;
+
+        const toolMessages = {
+            'cursor': '👆 Cursor mode: Read normally.',
+            'highlight': '🖍️ Highlighter: Select text to turn it into a clue!',
+            'eraser': '🧽 Eraser: Click highlighted clues to remove them.',
+            'clear': '🗑️ All clues removed.'
+        };
+
+        function triggerBleep() {
+            textContainer.classList.remove('pulse-bleep');
+            void textContainer.offsetWidth; 
+            textContainer.classList.add('pulse-bleep');
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function selectTool(tool) {
+            currentTool = tool;
+            
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tool === tool) btn.classList.add('active');
+            });
+
+            if (tool === 'cursor' || tool === 'highlight') {
+                textContainer.classList.remove('eraser-active');
+                textContainer.classList.remove('no-select');
+            } else if (tool === 'eraser') {
+                textContainer.classList.add('eraser-active');
+                textContainer.classList.add('no-select');
+                // Hide popup if switching tools
+                cancelHighlight();
+            }
+
+            triggerBleep();
+            showToast(toolMessages[tool]);
+        }
+
+        // Snap selection to nearest word boundary
+        function snapSelectionToWord(sel) {
+            const range = sel.getRangeAt(0);
+            let startNode = range.startContainer;
+            let startOffset = range.startOffset;
+            let endNode = range.endContainer;
+            let endOffset = range.endOffset;
+
+            // Alphanumeric and common word characters
+            const isWordChar = (char) => /[a-zA-Z0-9'-]/.test(char);
+
+            if (startNode.nodeType === Node.TEXT_NODE) {
+                const text = startNode.nodeValue;
+                while (startOffset > 0 && isWordChar(text[startOffset - 1])) {
+                    startOffset--;
+                }
+            }
+            if (endNode.nodeType === Node.TEXT_NODE) {
+                const text = endNode.nodeValue;
+                while (endOffset < text.length && isWordChar(text[endOffset])) {
+                    endOffset++;
+                }
+            }
+
+            try {
+                const newRange = document.createRange();
+                newRange.setStart(startNode, startOffset);
+                newRange.setEnd(endNode, endOffset);
+                sel.removeAllRanges();
+                sel.addRange(newRange);
+                return newRange;
+            } catch(e) {
+                return range; // Fallback to original selection if error
+            }
+        }
+
+        // Handle text selection and show popup
+        function handleSelection(e) {
+            if (confirmPopup.contains(e.target)) return;
+
+            if (currentTool === 'highlight') {
+                const selection = window.getSelection();
+                if (!selection.isCollapsed && textContainer.contains(selection.anchorNode)) {
+                    
+                    const snappedRange = snapSelectionToWord(selection);
+                    pendingSelectionRange = snappedRange.cloneRange();
+                    
+                    // Show confirmation popup above the selection
+                    const rect = snappedRange.getBoundingClientRect();
+                    confirmPopup.style.display = 'flex';
+                    
+                    const top = rect.top + window.scrollY - confirmPopup.offsetHeight - 15;
+                    const left = rect.left + window.scrollX + (rect.width / 2) - (confirmPopup.offsetWidth / 2);
+                    
+                    confirmPopup.style.top = `${top}px`;
+                    confirmPopup.style.left = `${left}px`;
+                } else {
+                    confirmPopup.style.display = 'none';
+                }
+            } else {
+                confirmPopup.style.display = 'none';
+            }
+        }
+        
+        document.addEventListener('mouseup', handleSelection);
+        document.addEventListener('touchend', (e) => {
+            setTimeout(() => handleSelection(e), 150); // slight delay for mobile selection handles
+        });
+
+        // Apply Highlight after clicking ✅
+        function confirmHighlight() {
+            if (pendingSelectionRange) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(pendingSelectionRange);
+
+                textContainer.contentEditable = 'true';
+                document.execCommand('BackColor', false, '#fef08a'); 
+                textContainer.contentEditable = 'false';
+                selection.removeAllRanges(); 
+            }
+            confirmPopup.style.display = 'none';
+            pendingSelectionRange = null;
+            triggerBleep();
+        }
+
+        // Cancel Highlight after clicking ❌
+        function cancelHighlight() {
+            window.getSelection().removeAllRanges();
+            confirmPopup.style.display = 'none';
+            pendingSelectionRange = null;
+        }
+
+        // Clear All Tool
+        function clearAll() {
+            cancelHighlight();
+            textContainer.querySelectorAll('span, font').forEach(el => {
+                if (el.style.backgroundColor || el.style.background) {
+                    el.removeAttribute('style'); // Removes the inline style, disabling the highlight CSS
+                }
+            });
+            triggerBleep();
+            showToast(toolMessages['clear']);
+        }
+
+        // Eraser Tool (Click to remove highlight)
+        textContainer.addEventListener('click', (e) => {
+            if (currentTool === 'eraser') {
+                let el = e.target;
+                // Check if clicked element is a highlighted text node
+                if ((el.tagName === 'SPAN' || el.tagName === 'FONT') && (el.style.backgroundColor || el.style.background)) {
+                    el.removeAttribute('style');
+                    triggerBleep();
+                    showToast('Clue Erased!');
+                }
+            }
+        });
+
     </script>
 </body>
 </html>
