@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Speaking Activity</title>
+    <!-- Friendly Educational Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Vibrant, friendly color palette */
+            --primary: #6366F1;       /* Indigo */
+            --primary-hover: #4F46E5;
+            --primary-light: #E0E7FF;
+            --secondary: #10B981;     /* Emerald */
+            --secondary-hover: #059669;
+            --accent: #F59E0B;        /* Amber */
+            --danger: #EF4444;        /* Red */
+            --danger-hover: #DC2626;
+            --bg: #F8FAFC;            /* Slate 50 */
+            --card-bg: #FFFFFF;
+            --text-main: #1E293B;     /* Slate 800 */
+            --text-muted: #64748B;    /* Slate 500 */
+            --border: #E2E8F0;        /* Slate 200 */
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Container & Layout */
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--text-main); font-weight: 800; }
+        
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* HUD / Header */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: none; /* Hidden on landing */
+        }
+
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            background: var(--primary-light);
+            color: var(--primary-hover);
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+        .stat-badge.score {
+            background: #D1FAE5;
+            color: #047857;
+        }
+
+        /* Landing Page Elements */
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        @media(max-width: 650px) {
+            .instruction-grid { grid-template-columns: 1fr; }
+            .card { padding: 24px; }
+        }
+
+        .info-box {
+            background: var(--bg);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+        
+        .info-box:hover { transform: translateY(-2px); }
+
+        .info-box h2 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul { padding-left: 20px; color: var(--text-muted); }
+        .info-box li { margin-bottom: 8px; }
+
+        /* Game UI */
+        .level-tag {
+            background: #FEF3C7;
+            color: #B45309;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .prompt-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .animal-icon {
+            font-size: 80px;
+            line-height: 1;
+            margin-bottom: 16px;
+            display: inline-block;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .prompt-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Speech Panel */
+        .speech-panel {
+            background: #F1F5F9;
+            border: 2px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 0 0 24px 0;
+            text-align: center;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .speech-panel.listening {
+            border-color: var(--danger);
+            border-style: solid;
+            background: #FEF2F2;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .speech-text {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .speech-placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        /* Buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active { transform: scale(0.96); }
+
+        .btn-primary { background: var(--primary); }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(99, 102, 241, 0.2); }
+        
+        .btn-success { background: var(--secondary); }
+        .btn-success:hover:not(:disabled) { background: var(--secondary-hover); transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(16, 185, 129, 0.2); }
+
+        .btn-danger { background: var(--danger); position: relative; }
+        .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+            box-shadow: none;
+        }
+        .btn-outline:hover:not(:disabled) { background: var(--bg); color: var(--text-main); }
+
+        .btn svg { width: 22px; height: 22px; fill: currentColor; }
+
+        /* Mic Pulsing Effect */
+        .btn-danger::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 14px;
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Status & Feedback Messages */
+        .browser-warning {
+            color: var(--accent);
+            background: #FFFBEB;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid #FDE68A;
+        }
+
+        .feedback-banner {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .feedback-success { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+        .feedback-error { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* Screen Visibility */
+        #game-screen, #end-screen { display: none; }
+        audio { display: none; }
+
+        /* Utilities */
+        .text-center { text-align: center; }
+        .mt-4 { margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Header / HUD -->
+        <div class="header-bar" id="hud">
+            <div class="stat-badge">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm4-4H7v-2h9v2zm0-4H7V7h9v2z"/></svg>
+                Part <span id="level-display">1</span>/4
+            </div>
+            <div class="stat-badge score">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <span id="score-display">0</span>
+            </div>
+        </div>
+
+        <!-- 1. Landing Screen -->
+        <div class="card" id="landing-screen">
+            <h1>Animal Voice Activity</h1>
+            <p class="subtitle">
+                Practice your English fluency, vocabulary, and expressive communication with this interactive voice module.
+            </p>
+
+            <div class="instruction-grid">
+                <div class="info-box">
+                    <h2>📋 How to Play</h2>
+                    <ul>
+                        <li>Read the prompt on the screen.</li>
+                        <li>Click <strong>"Start Speaking"</strong> and allow microphone access.</li>
+                        <li>Speak your answer clearly.</li>
+                        <li>Click <strong>"Stop Speaking"</strong> when done.</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box" style="border-color: #A7F3D0; background: #ECFDF5;">
+                    <h2 style="color: var(--secondary);">🎯 Challenges</h2>
+                    <ul>
+                        <li><strong>Guessing:</strong> Identify the animal.</li>
+                        <li><strong>Role-play:</strong> Act like the animal.</li>
+                        <li><strong>Storytelling:</strong> Finish the sentence.</li>
+                        <li><strong>Twists:</strong> Answer tricky questions!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <div id="browser-support-msg" class="browser-warning" style="display: inline-block; margin-bottom: 20px;">
+                    🎙️ <em>Please use Google Chrome for the best voice recognition experience.</em>
+                </div>
+                <br>
+                <button class="btn btn-primary" style="font-size: 1.25rem; padding: 16px 40px;" onclick="initActivity()">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Start Activity
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Main Game Screen -->
+        <div class="card" id="game-screen">
+            <div class="text-center">
+                <span class="level-tag" id="round-type">Category: Guessing</span>
+            </div>
+            
+            <div class="prompt-container">
+                <div class="animal-icon" id="mascot-display">🐘</div>
+                <div class="prompt-text" id="prompt-display">I am big, grey, and have a long trunk. What am I?</div>
+            </div>
+            
+            <div class="speech-panel" id="speech-panel">
+                <div class="speech-text" id="speech-output">
+                    <span class="speech-placeholder">Click "Start Speaking" and say your answer...</span>
+                </div>
+                <div id="speech-error" class="browser-warning"></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="record-btn" onclick="toggleRecording()">
+                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg> 
+                    <span id="record-text">Start Speaking</span>
+                </button>
+                
+                <button class="btn btn-outline" id="play-btn" style="display:none;" onclick="playAudio()">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play Audio
+                </button>
+                
+                <button class="btn btn-success" id="next-btn" style="display:none;" onclick="nextLevel()">
+                    Next Part <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </button>
+
+                <!-- Fallback skip button if voice recognition fails them -->
+                <button class="btn btn-outline" id="skip-btn" style="display:none;" onclick="skipLevel()">
+                    Skip
+                </button>
+            </div>
+
+            <div class="feedback-banner" id="feedback-msg"></div>
+        </div>
+
+        <!-- 3. End Screen -->
+        <div class="card" id="end-screen" class="text-center">
+            <h1 style="font-size: 2.5rem;">Activity Complete!</h1>
+            <div class="animal-icon" style="font-size: 100px; margin: 20px 0; animation: none;">🎉</div>
+            <p style="font-size: 1.5rem; margin: 20px 0; font-weight: 700;">
+                Final Score: <span style="color: var(--secondary);" id="final-score">0</span> Points
+            </p>
+            <p class="subtitle" style="margin-bottom: 40px;">
+                Excellent work communicating and expressing yourself!
+            </p>
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> 
+                    Play Again
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="audio-playback" controls></audio>
+
+    <script>
+        // Game Data & Levels
+        const levels = [
+            { 
+                type: 'Part 1: Guessing', 
+                icon: '🐘', 
+                prompt: "I am big, grey, and have a long trunk. What am I?", 
+                keywords: ['elephant'], 
+                successMsg: "Correct! It is an Elephant. Great pronunciation."
+            },
+            { 
+                type: 'Part 2: Role-play', 
+                icon: '🐒', 
+                prompt: "Act like a monkey! Tell me what you want to eat right now.", 
+                keywords: ['banana', 'bananas', 'fruit', 'apple'], 
+                successMsg: "Awesome! You sound just like a hungry monkey."
+            },
+            { 
+                type: 'Part 3: Storytelling', 
+                icon: '🦁', 
+                prompt: "Finish the sentence: The brave lion walked into the jungle and found...", 
+                // Any word typical of a jungle story works, making it flexible
+                keywords: ['tiger', 'monkey', 'friend', 'snake', 'river', 'tree', 'mouse', 'cave', 'treasure', 'food', 'water', 'bird', 'sleeping', 'meat'], 
+                successMsg: "Excellent storytelling!"
+            },
+            { 
+                type: 'Part 4: Twist Question', 
+                icon: '🐍', 
+                prompt: "Think quickly! Name one animal that does NOT have legs.", 
+                keywords: ['snake', 'fish', 'worm', 'whale', 'shark', 'dolphin', 'seal', 'eel', 'snail'], 
+                successMsg: "Perfect! You passed the twist challenge."
+            }
+        ];
+
+        // State Variables
+        let currentLevelIndex = 0;
+        let score = 0;
+        
+        // Audio & Speech Variables
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let audioBlobURL = null;
+        let recognition = null;
+        let isRecording = false;
+        let liveTranscript = ""; 
+        let hasSpeechSupport = false;
+
+        // Icons SVG Strings
+        const icons = {
+            mic: '<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>',
+            stop: '<svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>',
+            play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+        };
+
+        // DOM Elements Map
+        const el = {
+            screens: {
+                landing: document.getElementById('landing-screen'),
+                game: document.getElementById('game-screen'),
+                end: document.getElementById('end-screen'),
+                hud: document.getElementById('hud')
+            },
+            displays: {
+                level: document.getElementById('level-display'),
+                score: document.getElementById('score-display'),
+                type: document.getElementById('round-type'),
+                mascot: document.getElementById('mascot-display'),
+                prompt: document.getElementById('prompt-display'),
+                speechPanel: document.getElementById('speech-panel'),
+                speech: document.getElementById('speech-output'),
+                speechError: document.getElementById('speech-error')
+            },
+            buttons: {
+                record: document.getElementById('record-btn'),
+                recordText: document.getElementById('record-text'),
+                play: document.getElementById('play-btn'),
+                next: document.getElementById('next-btn'),
+                skip: document.getElementById('skip-btn')
+            },
+            feedbackMsg: document.getElementById('feedback-msg'),
+            audioPlayback: document.getElementById('audio-playback')
+        };
+
+        // Initialize Activity & Permissions
+        async function initActivity() {
+            try {
+                // Request Mic Permission
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data && event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    if (audioChunks.length > 0) {
+                        const audioBlob = new Blob(audioChunks); 
+                        audioBlobURL = URL.createObjectURL(audioBlob);
+                        el.audioPlayback.src = audioBlobURL;
+                        el.audioPlayback.load();
+                        el.buttons.play.style.display = 'inline-flex';
+                    }
+                };
+
+                // Setup Web Speech API
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    hasSpeechSupport = true;
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.lang = 'en-US';
+
+                    recognition.onresult = (event) => {
+                        let interimTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; ++i) {
+                            if (event.results[i].isFinal) {
+                                liveTranscript += event.results[i][0].transcript + ' ';
+                            } else {
+                                interimTranscript += event.results[i][0].transcript;
+                            }
+                        }
+                        
+                        // Update UI smoothly
+                        el.displays.speech.innerHTML = `
+                            <span style="color: var(--primary);">${liveTranscript}</span>
+                            <span style="color: var(--text-muted); opacity: 0.8;">${interimTranscript}</span>
+                        `;
+                        
+                        el.displays.speechError.style.display = 'none';
+
+                        // Run checking logic
+                        const fullText = (liveTranscript + " " + interimTranscript).toLowerCase();
+                        checkAnswer(fullText);
+                    };
+
+                    recognition.onerror = (e) => {
+                        console.warn("Speech Recognition Error: ", e.error);
+                        handleSpeechError(e.error);
+                        if(isRecording && e.error !== 'no-speech') stopRecording();
+                    };
+
+                    recognition.onend = () => {
+                        if (isRecording) {
+                            // If API ends prematurely, stop recording UI
+                            stopRecording(true);
+                        }
+                    };
+
+                } else {
+                    hasSpeechSupport = false;
+                    console.warn("Speech-to-Text not supported in this browser.");
+                }
+
+                // Transition UI
+                el.screens.landing.style.display = 'none';
+                el.screens.hud.style.display = 'flex';
+                el.screens.game.style.display = 'block';
+                loadLevel(0);
+
+            } catch (err) {
+                alert("Microphone access is required to play. Please check your browser permissions and reload.");
+                console.error(err);
+            }
+        }
+
+        // Handle specific speech errors
+        function handleSpeechError(errorType) {
+            let msg = "Microphone error. Please try again.";
+            if (errorType === 'not-allowed' || errorType === 'service-not-allowed') {
+                msg = "Microphone access denied. Please allow mic access in your browser.";
+            } else if (errorType === 'network') {
+                msg = "Network connection required for speech recognition.";
+            } else if (errorType === 'no-speech') {
+                return; // Ignore silence errors visually to not spam the user
+            }
+            el.displays.speechError.innerText = `⚠️ ${msg}`;
+            el.displays.speechError.style.display = 'block';
+        }
+
+        // Load specific level data
+        function loadLevel(index) {
+            currentLevelIndex = index;
+            const level = levels[index];
+            
+            // Reset UI for new round
+            el.displays.level.innerText = index + 1;
+            el.displays.type.innerText = level.type;
+            el.displays.mascot.innerText = level.icon;
+            el.displays.prompt.innerText = level.prompt;
+            
+            el.displays.speech.innerHTML = `<span class="speech-placeholder">Click "Start Speaking" and say your answer...</span>`;
+            el.displays.speechError.style.display = 'none';
+            el.feedbackMsg.style.display = 'none';
+            
+            el.buttons.play.style.display = 'none';
+            el.buttons.next.style.display = 'none';
+            el.buttons.skip.style.display = 'none';
+            
+            el.buttons.record.style.display = 'inline-flex';
+            el.buttons.record.disabled = false;
+            el.buttons.record.className = "btn btn-primary";
+            el.buttons.record.innerHTML = `${icons.mic} <span id="record-text">Start Speaking</span>`;
+            
+            // Subtle animation re-trigger
+            el.displays.mascot.style.animation = 'none';
+            setTimeout(() => el.displays.mascot.style.animation = 'bounce 2s infinite ease-in-out', 50);
+        }
+
+        // Toggle Recording State
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            if (isRecording || el.buttons.record.disabled) return;
+            
+            isRecording = true;
+            audioChunks = [];
+            liveTranscript = ""; 
+            
+            el.buttons.play.style.display = 'none';
+            el.displays.speechError.style.display = 'none';
+            el.feedbackMsg.style.display = 'none';
+            el.buttons.skip.style.display = 'none';
+            
+            try { mediaRecorder.start(); } catch(e){ console.error(e); }
+            if (hasSpeechSupport) {
+                try { recognition.start(); } catch(e){ console.error(e); }
+            }
+
+            // Update UI to listening state
+            el.displays.speechPanel.classList.add('listening');
+            el.buttons.record.className = "btn btn-danger";
+            el.buttons.record.innerHTML = `${icons.stop} <span id="record-text">Stop Speaking</span>`;
+            
+            if (hasSpeechSupport) {
+                el.displays.speech.innerHTML = `<span class="speech-placeholder">(Listening... your words will appear here)</span>`;
+            } else {
+                el.displays.speech.innerHTML = `<span style="color: var(--primary);">Recording Audio... (Auto-grading not supported in this browser)</span>`;
+            }
+        }
+
+        function stopRecording(autoStopped = false) {
+            if (!isRecording) return;
+            isRecording = false;
+
+            try { if(mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop(); } catch(e){}
+            if (hasSpeechSupport) {
+                try { recognition.stop(); } catch(e){}
+            }
+
+            // Revert UI from listening state
+            el.displays.speechPanel.classList.remove('listening');
+            el.buttons.record.className = "btn btn-primary";
+            el.buttons.record.innerHTML = `${icons.mic} <span id="record-text">Try Again</span>`;
+
+            // Display skip button in case they get stuck
+            if(el.buttons.next.style.display === 'none') {
+                 el.buttons.skip.style.display = 'inline-flex';
+            }
+
+            if (autoStopped && liveTranscript.trim() === "") {
+                el.displays.speechError.innerText = "⚠️ Listening paused. Click 'Try Again' to continue.";
+                el.displays.speechError.style.display = 'block';
+            } else if (liveTranscript.trim() !== "" && el.buttons.next.style.display === 'none') {
+                 showFeedback("Didn't quite catch the expected word. Try again or Skip!", false);
+            }
+
+            // Non-supported browser fallback
+            if (!hasSpeechSupport && el.buttons.next.style.display === 'none') {
+                 showFeedback("Audio Recorded! (Manual review required)", true);
+                 el.buttons.next.style.display = 'inline-flex';
+                 el.buttons.record.style.display = 'none';
+                 el.buttons.skip.style.display = 'none';
+            }
+        }
+
+        function playAudio() {
+            if (audioBlobURL) {
+                const originalContent = el.buttons.play.innerHTML;
+                el.buttons.play.innerHTML = `🔊 Playing...`;
+                
+                const playPromise = el.audioPlayback.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.error("Playback failed:", error);
+                        el.buttons.play.innerHTML = `❌ Error`;
+                        setTimeout(() => { el.buttons.play.innerHTML = originalContent; }, 2000);
+                    });
+                }
+                el.audioPlayback.onended = () => { el.buttons.play.innerHTML = originalContent; };
+            }
+        }
+
+        // Answer Checking Logic
+        function checkAnswer(spokenText) {
+            const level = levels[currentLevelIndex];
+            let isCorrect = false;
+
+            // Use regex to match whole words to prevent partial matches (e.g., 'cat' in 'category')
+            isCorrect = level.keywords.some(keyword => {
+                const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+                return regex.test(spokenText);
+            });
+
+            // Storytelling fallback: Just needs to be a reasonable length if keywords miss
+            if (level.type.includes('Storytelling') && spokenText.split(' ').length >= 4) {
+                isCorrect = true;
+            }
+
+            if (isCorrect && el.buttons.next.style.display === 'none') {
+                handleSuccess(level.successMsg);
+            }
+        }
+
+        function handleSuccess(msg) {
+            if (isRecording) stopRecording();
+            
+            score += 100;
+            el.displays.score.innerText = score;
+            
+            showFeedback(`✨ ${msg}`, true);
+            
+            el.buttons.record.style.display = 'none';
+            el.buttons.skip.style.display = 'none';
+            el.buttons.next.style.display = 'inline-flex';
+            
+            // Pop animation for the score
+            el.displays.score.parentElement.style.transform = 'scale(1.2)';
+            setTimeout(() => { el.displays.score.parentElement.style.transform = 'scale(1)'; }, 300);
+        }
+
+        function showFeedback(msg, isSuccess) {
+            el.feedbackMsg.innerText = msg;
+            el.feedbackMsg.className = `feedback-banner ${isSuccess ? 'feedback-success' : 'feedback-error'}`;
+            el.feedbackMsg.style.display = 'block';
+        }
+
+        function skipLevel() {
+            if(isRecording) stopRecording();
+            nextLevel();
+        }
+
+        function nextLevel() {
+            if (currentLevelIndex < levels.length - 1) {
+                loadLevel(currentLevelIndex + 1);
+            } else {
+                endActivity();
+            }
+        }
+
+        function endActivity() {
+            el.screens.game.style.display = 'none';
+            el.screens.hud.style.display = 'none';
+            el.screens.end.style.display = 'block';
+            
+            document.getElementById('final-score').innerText = score;
+        }
+    </script>
+</body>
+</html>
