@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Animals Around the World</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦁</text></svg>">
+    
+    <!-- Google Fonts for Kid-Friendly Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Custom Styles & Animations */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+            margin: 0;
+            color: #333;
+        }
+
+        h1, h2, h3, h4, .kid-font {
+            font-family: 'Baloo 2', cursive;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #ff9a9e; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff758c; }
+
+        /* Toast Animation */
+        @keyframes slideInUp {
+            from { transform: translate(-50%, 100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+        @keyframes slideOutDown {
+            from { transform: translate(-50%, 0); opacity: 1; }
+            to { transform: translate(-50%, 100%); opacity: 0; }
+        }
+        .toast-enter { animation: slideInUp 0.3s forwards; }
+        .toast-exit { animation: slideOutDown 0.3s forwards; }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            z-index: 1000;
+            top: -10px;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Dashboard Panel (Fixed Top) -->
+    <nav class="fixed top-0 w-full z-50 glass-nav py-3 px-6 transition-all duration-300">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop(); playClick()">
+                <span class="text-3xl">🌍</span>
+                <span class="text-2xl font-bold kid-font text-indigo-600 tracking-wide">ZooWorld</span>
+            </div>
+            
+            <div class="flex items-center gap-6 w-full sm:w-auto">
+                <div class="flex-1 sm:min-w-[200px]">
+                    <div class="flex justify-between text-sm font-bold text-gray-600 mb-1">
+                        <span>Animals Explored</span>
+                        <span id="explore-count">0/10</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 border-2 border-white shadow-inner">
+                        <div id="explore-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-500 w-0"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-100 border-2 border-yellow-400 text-yellow-700 px-4 py-1 rounded-full font-bold flex items-center gap-2 shadow-sm">
+                    <span>⭐</span>
+                    <span id="score-display">Score: 0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20 relative">
+        <div class="absolute top-32 left-10 text-6xl floating" style="animation-delay: 0s;">🐘</div>
+        <div class="absolute top-40 right-10 text-6xl floating" style="animation-delay: 1s;">🦜</div>
+        <div class="absolute bottom-32 left-20 text-6xl floating" style="animation-delay: 2s;">🐢</div>
+        <div class="absolute bottom-40 right-20 text-6xl floating" style="animation-delay: 0.5s;">🐬</div>
+
+        <div class="glass-card p-10 rounded-[3rem] max-w-3xl w-full z-10 transform hover:scale-105 transition-transform duration-500">
+            <h1 class="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-6 drop-shadow-sm">
+                Explore Animals Around the World!
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-700 mb-8 font-semibold">
+                Learn their names, hear their sounds, and practice saying them out loud!
+            </p>
+            <button onclick="scrollToSection('explore'); playClick()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white kid-font text-2xl py-4 px-10 rounded-full shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-4 border-white">
+                Start Exploring 🚀
+            </button>
+        </div>
+        
+        <div class="mt-16 animate-bounce text-gray-500 cursor-pointer" onclick="scrollToSection('explore'); playClick()">
+            <svg class="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- Explore Section -->
+    <section id="explore" class="py-20 px-4 max-w-7xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-bold text-center text-indigo-800 mb-12">Discover by Category</h2>
+        
+        <!-- Categories Filters -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12" id="category-filters">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Regions Map (Simplified Filters) -->
+        <h2 class="text-3xl font-bold text-center text-teal-800 mt-16 mb-8">Or Find by Region 🗺️</h2>
+        <div class="flex flex-wrap justify-center gap-3 mb-16" id="region-filters">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Animals Grid -->
+        <div id="animals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- Mini Game Section -->
+    <section id="game" class="py-20 px-4">
+        <div class="max-w-4xl mx-auto glass-card rounded-[3rem] p-8 md:p-12 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 1s;"></div>
+            
+            <h2 class="text-4xl md:text-5xl font-bold text-purple-800 mb-4 relative z-10">🎮 Guess the Animal!</h2>
+            <p class="text-xl text-gray-700 mb-8 relative z-10">Who is hiding in the puzzle?</p>
+
+            <div class="bg-white rounded-3xl p-4 inline-block shadow-inner mb-8 relative z-10 border-4 border-dashed border-gray-300">
+                <div id="puzzle-container" class="w-64 h-64 mx-auto grid grid-cols-3 grid-rows-3 gap-1 rounded-2xl overflow-hidden transition-all duration-700">
+                    <!-- Pieces injected by JS -->
+                </div>
+            </div>
+
+            <div id="game-options" class="flex flex-wrap justify-center gap-4 relative z-10">
+                <!-- Buttons rendered by JS -->
+            </div>
+            
+            <div class="mt-8 relative z-10">
+                <button onclick="loadGame(); playClick()" class="text-gray-500 font-bold hover:text-purple-600 transition-colors">
+                    ⏭️ Skip this one
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-900 text-white text-center py-8 rounded-t-[3rem] mt-10">
+        <p class="text-xl kid-font">Made with 💖 for young explorers!</p>
+        <p class="text-sm text-indigo-300 mt-2">Interactive Learning App</p>
+    </footer>
+
+    <!-- Custom Toast Message Container -->
+    <div id="toast-container" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Application Logic -->
+    <script>
+        // --- Data ---
+        const animals = [
+            { id: 1, name: "Lion", category: "Mammal", region: "Africa", habitat: "Savanna", fact: "A lion's roar is so loud it can be heard up to 5 miles away! These big cats live in family groups called prides, where the females do most of the hunting. They love to rest and can sleep for up to 20 hours a day.", img: "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?auto=format&fit=crop&w=600&q=80", emoji: "🦁" },
+            { id: 2, name: "Elephant", category: "Mammal", region: "Africa", habitat: "Grasslands", fact: "Elephants are the largest land animals on Earth and have huge ears that help them stay cool. They use their long trunks to breathe, smell, drink water, and even grab food from tall trees. An elephant never forgets and is very protective of its family!", img: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=600&q=80", emoji: "🐘" },
+            { id: 3, name: "Penguin", category: "Bird", region: "Antarctica", habitat: "Ice and Oceans", fact: "Penguins are special birds that cannot fly in the air, but they are incredibly fast swimmers in the ocean. They wear a black and white 'tuxedo' of feathers that helps camouflage them from predators while swimming. To stay warm in the freezing cold, they huddle together in big groups!", img: "https://images.unsplash.com/photo-1598439210625-5067c578f3f6?auto=format&fit=crop&w=600&q=80", emoji: "🐧" },
+            { id: 4, name: "Parrot", category: "Bird", region: "Americas", habitat: "Rainforest", fact: "Parrots are highly intelligent and colorful birds found in tropical rainforests. Some species are so smart they can learn to mimic hundreds of human words and sounds. They use their strong, curved beaks to crack open hard nuts and seeds for food.", img: "https://cdn.britannica.com/35/3635-050-96241EC1/Scarlet-macaw-ara-macao.jpg?w=300", emoji: "🦜" },
+            { id: 5, name: "Sea Turtle", category: "Reptile", region: "Oceans", habitat: "Coral Reefs", fact: "Sea turtles are ancient reptiles that have been swimming in our oceans since the time of the dinosaurs! They can hold their breath for several hours while sleeping underwater. Female sea turtles travel thousands of miles to lay their eggs on the exact same beach where they were born.", img: "https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?auto=format&fit=crop&w=600&q=80", emoji: "🐢" },
+            { id: 6, name: "Chameleon", category: "Reptile", region: "Africa", habitat: "Rainforests", fact: "Chameleons are fascinating lizards known for their ability to change skin color to communicate and regulate their body temperature. They have incredibly long, sticky tongues that can shoot out at lightning speed to catch insects. Their eyes can move independently, allowing them to look in two different directions at once!", img: "https://www.avianexotichospital.com/uploads/1/0/4/8/104851457/chameleon-panther_1_orig.jpg", emoji: "🦎" },
+            { id: 7, name: "Octopus", category: "Sea Animal", region: "Oceans", habitat: "Coral Reefs", fact: "Octopuses are incredibly smart sea creatures with eight long arms covered in suction cups. They have no bones at all, which allows them to squeeze through tiny holes to escape danger. When threatened, they can squirt a cloud of dark ink to confuse predators and make a quick getaway!", img: "https://thinkbluemarble.com/wp-content/uploads/2024/08/octopus-1536x1152.jpg", emoji: "🐙" },
+            { id: 8, name: "Honey Bee", category: "Insect", region: "Americas", habitat: "Meadows", fact: "Honey bees are hard-working insects that live in large colonies ruled by a single queen. They fly from flower to flower collecting nectar, which they use to make sweet and delicious honey. To tell their friends where the best flowers are, bees perform a special waggle dance!", img: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Apis_mellifera_Western_honey_bee.jpg", emoji: "🐝" },
+            { id: 9, name: "Giant Panda", category: "Mammal", region: "Asia", habitat: "Bamboo Forests", fact: "Giant pandas are adorable bears that spend almost their entire day eating their favorite food: bamboo! They have a special wrist bone that acts like a thumb to help them hold the bamboo stalks. Even though they are very big and heavy, pandas are excellent tree climbers and swimmers.", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Grosser_Panda.JPG/500px-Grosser_Panda.JPG", emoji: "🐼" },
+            { id: 10, name: "Koala", category: "Mammal", region: "Australia", habitat: "Eucalyptus Forests", fact: "Koalas are fluffy marsupials that live high up in the eucalyptus trees of Australia. They are very sleepy animals and can rest for up to 22 hours a day! Their diet consists almost entirely of eucalyptus leaves, which provide them with both food and water.", img: "https://cdn.britannica.com/26/162626-050-3534626F/Koala.jpg?w=300", emoji: "🐨" }
+        ];
+
+        const categories = ["All", "Mammal", "Bird", "Reptile", "Sea Animal", "Insect"];
+        const regions = ["All", "Africa", "Asia", "Americas", "Australia", "Antarctica", "Oceans"];
+
+        // --- State ---
+        let currentCategory = "All";
+        let currentRegion = "All";
+        let exploredAnimals = new Set();
+        let score = 0;
+        let currentGameAnimal = null;
+
+        // --- Audio System (Web Audio API) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playTone(freq, type, duration, vol = 0.1) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.value = freq;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        function playClick() { playTone(600, 'sine', 0.1, 0.05); }
+        function playSuccess() { 
+            playTone(400, 'sine', 0.1, 0.1); 
+            setTimeout(() => playTone(600, 'sine', 0.2, 0.15), 100); 
+            setTimeout(() => playTone(800, 'sine', 0.3, 0.2), 200); 
+        }
+        function playError() { 
+            playTone(300, 'sawtooth', 0.2, 0.1); 
+            setTimeout(() => playTone(200, 'sawtooth', 0.3, 0.1), 200); 
+        }
+
+        // --- Toast Messages ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgColor = "bg-white";
+            let textColor = "text-gray-800";
+            let icon = "ℹ️";
+            let border = "border-gray-200";
+
+            if (type === 'success') { bgColor = "bg-green-100"; textColor = "text-green-800"; icon = "🎉"; border = "border-green-400"; }
+            if (type === 'error') { bgColor = "bg-red-100"; textColor = "text-red-800"; icon = "❌"; border = "border-red-400"; }
+
+            toast.className = `${bgColor} ${textColor} border-2 ${border} px-6 py-3 rounded-full shadow-xl font-bold text-lg flex items-center gap-3 toast-enter pointer-events-auto`;
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- Speech API ---
+        function speak(text) {
+            playClick();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9; // Slightly slower for kids
+                utterance.pitch = 1.2; // Slightly higher, friendlier pitch
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast("Text-to-speech not supported here.", "error");
+            }
+        }
+
+        function listenToAnimal(animalName, buttonId, animalId) {
+            playClick();
+            const btn = document.getElementById(buttonId);
+            const originalText = btn.innerHTML;
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast("Your browser doesn't support the microphone.", "error");
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            btn.innerHTML = `🎙️ Listening...`;
+            btn.classList.add("animate-pulse", "bg-yellow-400", "text-yellow-900");
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const speechResult = event.results[0][0].transcript.toLowerCase().replace(/[^a-z\s]/gi, '');
+                const expected = animalName.toLowerCase();
+                
+                if (speechResult.includes(expected) || expected.includes(speechResult)) {
+                    showToast(`Great job! You said ${animalName}!`, "success");
+                    playSuccess();
+                    markExplored(animalId);
+                    fireConfetti();
+                } else {
+                    showToast(`I heard "${speechResult}". Try saying "${animalName}"!`, "error");
+                    playError();
+                }
+            };
+
+            recognition.onerror = (event) => {
+                if(event.error !== 'no-speech') {
+                    showToast("Oops, microphone error. Try again!", "error");
+                }
+            };
+
+            recognition.onend = () => {
+                btn.innerHTML = originalText;
+                btn.classList.remove("animate-pulse", "bg-yellow-400", "text-yellow-900");
+            };
+        }
+
+        // --- Dashboard Logic ---
+        function markExplored(animalId) {
+            exploredAnimals.add(animalId);
+            updateDashboard();
+        }
+
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score-display').innerText = `Score: ${score}`;
+            document.getElementById('score-display').parentElement.classList.add('scale-110', 'bg-yellow-300');
+            setTimeout(() => {
+                document.getElementById('score-display').parentElement.classList.remove('scale-110', 'bg-yellow-300');
+            }, 300);
+        }
+
+        function updateDashboard() {
+            const count = exploredAnimals.size;
+            const total = animals.length;
+            document.getElementById('explore-count').innerText = `${count}/${total}`;
+            const percentage = (count / total) * 100;
+            document.getElementById('explore-bar').style.width = `${percentage}%`;
+        }
+
+        // --- UI Rendering ---
+        function renderFilters() {
+            const catContainer = document.getElementById('category-filters');
+            catContainer.innerHTML = categories.map(cat => `
+                <button onclick="setCategory('${cat}')" 
+                    class="${currentCategory === cat ? 'bg-indigo-600 text-white shadow-lg scale-105' : 'bg-white text-indigo-600 hover:bg-indigo-50'} 
+                    font-bold py-2 px-6 rounded-full border-2 border-indigo-200 transition-all duration-300">
+                    ${cat}
+                </button>
+            `).join('');
+
+            const regContainer = document.getElementById('region-filters');
+            regContainer.innerHTML = regions.map(reg => `
+                <button onclick="setRegion('${reg}')" 
+                    class="${currentRegion === reg ? 'bg-teal-600 text-white shadow-lg scale-105' : 'bg-white text-teal-600 hover:bg-teal-50'} 
+                    font-bold py-2 px-6 rounded-full border-2 border-teal-200 transition-all duration-300">
+                    ${reg}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(cat) { playClick(); currentCategory = cat; currentRegion = "All"; renderFilters(); renderAnimals(); }
+        function setRegion(reg) { playClick(); currentRegion = reg; currentCategory = "All"; renderFilters(); renderAnimals(); }
+
+        function renderAnimals() {
+            const grid = document.getElementById('animals-grid');
+            grid.innerHTML = ''; // clear
+
+            let filtered = animals.filter(a => 
+                (currentCategory === "All" || a.category === currentCategory) &&
+                (currentRegion === "All" || a.region === currentRegion)
+            );
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center text-2xl text-gray-500 py-10 font-bold">No animals found here. Try another place! 🌍</div>`;
+                return;
+            }
+
+            filtered.forEach((animal, index) => {
+                const isExplored = exploredAnimals.has(animal.id);
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-[2rem] overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 animate-fade-in`;
+                card.style.animationDelay = `${index * 0.05}s`;
+                
+                card.innerHTML = `
+                    <div class="relative h-48 overflow-hidden bg-gray-200 group">
+                        <img src="${animal.img}" alt="${animal.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute top-3 right-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-2xl shadow-sm">
+                            ${animal.emoji}
+                        </div>
+                        ${isExplored ? `<div class="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-sm flex items-center gap-1">⭐ Explored</div>` : ''}
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-end mb-2">
+                            <h3 class="text-3xl font-bold text-indigo-900">${animal.name}</h3>
+                            <span class="text-sm font-bold text-teal-600 bg-teal-100 px-3 py-1 rounded-full">${animal.habitat}</span>
+                        </div>
+                        <p class="text-gray-600 mb-6 min-h-[3rem] text-sm md:text-base">${animal.fact}</p>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="speak('${animal.name}. ${animal.fact}'); markExplored(${animal.id})" 
+                                class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold py-3 px-4 rounded-2xl flex flex-col items-center justify-center gap-1 transition-colors border-2 border-blue-200">
+                                <span class="text-2xl">🔊</span>
+                                <span class="text-xs uppercase tracking-wide">Hear Fact</span>
+                            </button>
+                            
+                            <button id="btn-speak-${animal.id}" onclick="listenToAnimal('${animal.name}', 'btn-speak-${animal.id}', ${animal.id})" 
+                                class="bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-3 px-4 rounded-2xl flex flex-col items-center justify-center gap-1 transition-colors border-2 border-pink-200">
+                                <span class="text-2xl">🎤</span>
+                                <span class="text-xs uppercase tracking-wide">Say Name</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- Mini Game Logic ---
+        function loadGame() {
+            const puzzleContainer = document.getElementById('puzzle-container');
+            const optionsDiv = document.getElementById('game-options');
+            
+            // Reset state
+            puzzleContainer.style.gap = '4px';
+            optionsDiv.innerHTML = '';
+
+            // Pick random target
+            currentGameAnimal = animals[Math.floor(Math.random() * animals.length)];
+            
+            // Pick 2 wrong options
+            let options = [currentGameAnimal];
+            while(options.length < 3) {
+                let rand = animals[Math.floor(Math.random() * animals.length)];
+                if(!options.find(o => o.id === rand.id)) options.push(rand);
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+
+            // Generate Puzzle
+            puzzleContainer.innerHTML = '';
+            const positions = ['0% 0%', '50% 0%', '100% 0%', '0% 50%', '50% 50%', '100% 50%', '0% 100%', '50% 100%', '100% 100%'];
+            let shuffled = [...positions].sort(() => Math.random() - 0.5);
+            
+            for(let i = 0; i < 9; i++) {
+                const piece = document.createElement('div');
+                piece.style.backgroundImage = `url(${currentGameAnimal.img})`;
+                piece.style.backgroundSize = '300% 300%';
+                piece.style.backgroundPosition = shuffled[i];
+                
+                // Random rotation for extra puzzle effect
+                const rotations = ['0deg', '90deg', '180deg', '270deg'];
+                const randomRot = rotations[Math.floor(Math.random() * rotations.length)];
+                piece.style.transform = `rotate(${randomRot})`;
+                
+                piece.className = "w-full h-full transition-all duration-700 puzzle-piece bg-gray-200";
+                piece.dataset.correctPosition = positions[i];
+                puzzleContainer.appendChild(piece);
+            }
+            
+            options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.innerHTML = `${opt.emoji} ${opt.name}`;
+                btn.className = "bg-white text-purple-700 border-2 border-purple-200 font-bold py-3 px-6 rounded-full shadow-md hover:bg-purple-50 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 text-lg sm:text-xl";
+                btn.onclick = () => handleGuess(opt.id, btn);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleGuess(guessedId, btnElement) {
+            playClick();
+            const puzzleContainer = document.getElementById('puzzle-container');
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            const buttons = document.getElementById('game-options').querySelectorAll('button');
+            
+            // Disable buttons temporarily
+            buttons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (guessedId === currentGameAnimal.id) {
+                // Correct!
+                btnElement.classList.replace('bg-white', 'bg-green-400');
+                btnElement.classList.replace('text-purple-700', 'text-white');
+                
+                // Solve Puzzle
+                puzzleContainer.style.gap = '0px';
+                pieces.forEach(piece => {
+                    piece.style.backgroundPosition = piece.dataset.correctPosition;
+                    piece.style.transform = 'rotate(0deg)';
+                });
+                
+                playSuccess();
+                fireConfetti();
+                updateScore(10);
+                showToast("You got it right! +10 Points", "success");
+                speak(`Correct! It's a ${currentGameAnimal.name}`);
+
+                setTimeout(() => {
+                    loadGame();
+                }, 3000);
+            } else {
+                // Wrong
+                btnElement.classList.replace('bg-white', 'bg-red-400');
+                btnElement.classList.replace('text-purple-700', 'text-white');
+                btnElement.classList.add('animate-shake');
+                
+                playError();
+                showToast("Oops, not quite! Try again.", "error");
+
+                setTimeout(() => {
+                    btnElement.classList.replace('bg-red-400', 'bg-white');
+                    btnElement.classList.replace('text-white', 'text-purple-700');
+                    btnElement.classList.remove('animate-shake');
+                    buttons.forEach(b => b.style.pointerEvents = 'auto');
+                }, 1000);
+            }
+        }
+
+        // --- Utilities ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function fireConfetti() {
+            const colors = ['#ff9a9e', '#fecfef', '#a1c4fd', '#c2e9fb', '#f6e58d', '#badc58'];
+            for (let i = 0; i < 50; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti rounded-sm';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                conf.style.animationDelay = Math.random() + 's';
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 4000);
+            }
+        }
+
+        // Add custom shake animation via JS injecting tailwind class
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- Initialization ---
+        window.onload = () => {
+            updateDashboard();
+            renderFilters();
+            renderAnimals();
+            loadGame();
+        };
+
+    </script>
+</body>
+</html>
