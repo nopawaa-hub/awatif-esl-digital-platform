@@ -66,42 +66,71 @@
     </header>
 
     <!-- Main Missions Container -->
-    <main class="w-full max-w-4xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <main class="w-full max-w-5xl mx-auto">
+        
+        <!-- Pre-Lesson Section (Canva Embed) -->
+        <section class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-xl border-4 border-pastel-pink mb-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-pastel-pink rounded-bl-full -z-10 opacity-40"></div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-pink-500 mb-4 flex items-center gap-3">
+                <span class="text-4xl bg-pink-100 p-2 rounded-full shadow-inner">🎯</span> 
+                Pre-Lesson: Meet the Animals!
+            </h2>
+            <p class="text-slate-600 font-medium mb-6 text-lg">Watch this presentation to discover amazing animal characteristics.</p>
             
-            <!-- Tool 1: Reading Mission -->
-            <div class="mission-card bg-white rounded-[2rem] p-8 shadow-xl border-4 border-pastel-yellow relative overflow-hidden flex flex-col items-center text-center">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-pastel-yellow rounded-bl-full -z-10 opacity-50"></div>
-                
-                <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner">
-                    📖
+            <!-- Clean Canva Embed Container -->
+            <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 4px 12px 0 rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; will-change: transform;">
+                <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                    src="https://www.canva.com/design/DAHICcSik-o/HLkqWQUBh7NNvUqBYNsBnQ/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Lesson Stages Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            
+            <!-- Stage 1: Presentation -->
+            <div class="mission-card bg-white rounded-3xl p-6 shadow-lg border-4 border-pastel-yellow relative flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner">
+                    🧑‍🏫
                 </div>
-                
-                <h2 class="text-3xl font-extrabold text-amber-600 mb-3">Reading Mission</h2>
-                <p class="text-slate-600 font-medium text-lg mb-8 flex-grow">
-                    Read and learn about tapirs ! 🦁🐘
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wide mb-1">Stage 1</h3>
+                <h2 class="text-2xl font-extrabold text-amber-600 mb-3">Presentation</h2>
+                <p class="text-slate-600 font-medium text-md mb-6 flex-grow">
+                    Time for our main lesson! Let's learn more together.
                 </p>
-                
-                <a href="tools/tool1.html" class="group relative inline-flex w-full items-center justify-center px-8 py-4 font-bold text-white bg-amber-500 rounded-full shadow-lg hover:bg-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-300 transition-colors text-xl">
-                    <span>Start Reading</span>
+                <a href="tools/presentation.html" class="group relative inline-flex w-full items-center justify-center px-6 py-3 font-bold text-white bg-amber-500 rounded-full shadow-md hover:bg-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-300 transition-colors">
+                    <span>Start Lesson</span>
                     <span class="ml-2 group-hover:translate-x-1 transition-transform">➡️</span>
                 </a>
             </div>
 
-            <!-- Tool 2: Speaking Mission -->
-            <div class="mission-card bg-white rounded-[2rem] p-8 shadow-xl border-4 border-pastel-green relative overflow-hidden flex flex-col items-center text-center">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-pastel-green rounded-bl-full -z-10 opacity-50"></div>
-                
-                <div class="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner">
+            <!-- Stage 2: Practice -->
+            <div class="mission-card bg-white rounded-3xl p-6 shadow-lg border-4 border-pastel-blue relative flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-sky-100 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner">
+                    🎮
+                </div>
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wide mb-1">Stage 2</h3>
+                <h2 class="text-2xl font-extrabold text-sky-600 mb-3">Practice</h2>
+                <p class="text-slate-600 font-medium text-md mb-6 flex-grow">
+                    Play a fun game to test what you have learned!
+                </p>
+                <a href="https://quiz.zep.us/en/play/zZq4bX" target="_blank" class="group relative inline-flex w-full items-center justify-center px-6 py-3 font-bold text-white bg-sky-500 rounded-full shadow-md hover:bg-sky-400 focus:outline-none focus:ring-4 focus:ring-sky-300 transition-colors">
+                    <span>Play Quiz</span>
+                    <span class="ml-2 group-hover:translate-x-1 transition-transform">➡️</span>
+                </a>
+            </div>
+
+            <!-- Stage 3: Production -->
+            <div class="mission-card bg-white rounded-3xl p-6 shadow-lg border-4 border-pastel-green relative flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner">
                     🎤
                 </div>
-                
-                <h2 class="text-3xl font-extrabold text-emerald-600 mb-3">Speaking Mission</h2>
-                <p class="text-slate-600 font-medium text-lg mb-8 flex-grow">
-                    Speak and record your awesome ideas about the animals! 🗣️🎙️
+                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wide mb-1">Stage 3</h3>
+                <h2 class="text-2xl font-extrabold text-emerald-600 mb-3">Production</h2>
+                <p class="text-slate-600 font-medium text-md mb-6 flex-grow">
+                    Your turn! Speak and record your own animal ideas.
                 </p>
-                
-                <a href="tools/tool2.html" class="group relative inline-flex w-full items-center justify-center px-8 py-4 font-bold text-white bg-emerald-500 rounded-full shadow-lg hover:bg-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition-colors text-xl">
+                <a href="tools/tool2.html" class="group relative inline-flex w-full items-center justify-center px-6 py-3 font-bold text-white bg-emerald-500 rounded-full shadow-md hover:bg-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition-colors">
                     <span>Start Speaking</span>
                     <span class="ml-2 group-hover:translate-x-1 transition-transform">➡️</span>
                 </a>
@@ -112,39 +141,55 @@
         <!-- Progress Section -->
         <section class="bg-white rounded-[2rem] p-6 sm:p-8 shadow-md border-2 border-blue-100 mb-8 relative">
             <h3 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-2">
-                <span>📈</span> My Progress Box
+                <span>📈</span> My Lesson Journey
             </h3>
             
-            <div class="space-y-6">
-                <!-- Reading Progress -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Pre-Lesson Progress -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-bold text-lg text-slate-700 flex items-center gap-2">
-                            📖 Reading
-                        </span>
-                        <span class="text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                            ✅ Completed
-                        </span>
+                        <span class="font-bold text-slate-700 flex items-center gap-2">🎯 Pre-Lesson</span>
+                        <span class="text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full text-xs">✅ Completed</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-4 shadow-inner overflow-hidden">
-                        <div class="bg-gradient-to-r from-emerald-400 to-emerald-500 h-4 rounded-full w-full"></div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden">
+                        <div class="bg-gradient-to-r from-emerald-400 to-emerald-500 h-3 rounded-full w-full"></div>
                     </div>
                 </div>
 
-                <!-- Speaking Progress -->
+                <!-- Stage 1 Progress -->
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-bold text-lg text-slate-700 flex items-center gap-2">
-                            🎤 Speaking
-                        </span>
-                        <span class="text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                            ⏳ Not Started
-                        </span>
+                        <span class="font-bold text-slate-700 flex items-center gap-2">🧑‍🏫 Presentation</span>
+                        <span class="text-amber-600 font-bold bg-amber-100 px-3 py-1 rounded-full text-xs">🔄 In Progress</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-4 shadow-inner overflow-hidden">
-                        <div class="bg-slate-300 h-4 rounded-full w-[0%]"></div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden">
+                        <div class="bg-gradient-to-r from-amber-400 to-amber-500 h-3 rounded-full w-[50%]"></div>
                     </div>
                 </div>
+
+                <!-- Stage 2 Progress -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-slate-700 flex items-center gap-2">🎮 Practice</span>
+                        <span class="text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-full text-xs">⏳ Not Started</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden">
+                        <div class="bg-slate-300 h-3 rounded-full w-0"></div>
+                    </div>
+                </div>
+
+                <!-- Stage 3 Progress -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-slate-700 flex items-center gap-2">🎤 Production</span>
+                        <span class="text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-full text-xs">⏳ Not Started</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 shadow-inner overflow-hidden">
+                        <div class="bg-slate-300 h-3 rounded-full w-0"></div>
+                    </div>
+                </div>
+
             </div>
         </section>
 
